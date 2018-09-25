@@ -6,6 +6,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// func TestTokeniser(t *testing.T) {
+// 	input := `if $foo contains(some string)
+// 	show cancel alert (Title message) (This is the body showing variable \$bar as $bar with text after)
+// end if
+// show $$date(current)`
+// 	stream := tokens(input)
+// 	expected := []string{"if", "$", "foo", "contains", "(", "some string", ")",
+// 		"show", "cancel", "alert", "(", "Title message", ")",
+// 		"(", "This is the body showing variable $bar as ", "$", "bar", " with text after", ")",
+// 		"end", "if",
+// 		"show", "$$", "date(current)",
+// 	}
+// }
+
 func TestTokeniserWords(t *testing.T) {
 	input := `show cancel alert`
 	actual := TokenStream(input)
