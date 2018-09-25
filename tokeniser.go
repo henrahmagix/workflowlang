@@ -3,10 +3,11 @@ package workflowlang
 import "bytes"
 
 type Token struct {
-	line   int
-	col    int
-	symbol rune
-	text   string
+	line       int
+	col        int
+	symbol     rune
+	text       string
+	whitespace int
 }
 
 type tokeniser struct {
@@ -35,7 +36,7 @@ func (t *tokeniser) stream(input string) (stream []*Token) {
 			pos = i - colReset
 			t := &Token{line: line, col: pos}
 			if char == ' ' {
-				t.text = string(char)
+				t.whitespace += 1
 			} else {
 				t.symbol = char
 			}
