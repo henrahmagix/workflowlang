@@ -17,7 +17,7 @@ func TokenStream(input string) (stream []*Token) {
 			}
 			pos = i + 1
 			continue
-		case '(', ')', '$', '\\':
+		case '(', ')', '$', '\\', '\n', '\t':
 			if text != "" {
 				stream = append(stream, &Token{pos, text})
 				text = ""

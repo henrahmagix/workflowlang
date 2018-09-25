@@ -55,3 +55,15 @@ func TestTokeniserEscapedChars(t *testing.T) {
 	}
 	assert.Equal(t, expected, actual)
 }
+
+func TestTokeniserNewlines(t *testing.T) {
+	input := `if $foo equals bar
+	something
+end if`
+	actual := TokenStream(input)
+	expected := []*Token{
+		{0, "if"}, {3, "$"}, {4, "foo"}, {8, "equals"}, {15, "bar"}, {18, "\n"},
+		{19, "\t"}, {20, "something"}, {29, "\n"}, {30, "end"}, {34, "if"},
+	}
+	assert.Equal(t, expected, actual)
+}
