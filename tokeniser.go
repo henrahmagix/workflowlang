@@ -1,9 +1,10 @@
 package workflowlang
 
 type Token struct {
-	line int
-	col  int
-	text string
+	line   int
+	col    int
+	symbol rune
+	text   string
 }
 
 func TokenStream(input string) (stream []*Token) {
@@ -15,11 +16,17 @@ func TokenStream(input string) (stream []*Token) {
 		switch char {
 		case ' ', '(', ')', '$', '\\', '\n', '\t':
 			if text != "" {
-				stream = append(stream, &Token{line, pos, text})
+				stream = append(stream, &Token{line: line, col: pos, text: text})
 				text = ""
 			}
 			pos = i - colReset
-			stream = append(stream, &Token{line, pos, string(char)})
+			t := &Token{line: line, col: pos}
+			if char == ' ' {
+				t.text = string(char)
+			} else {
+				t.symbol = char
+			}
+			stream = append(stream, t)
 			if char == '\n' {
 				pos = 0
 				colReset = i + 1
@@ -32,7 +39,7 @@ func TokenStream(input string) (stream []*Token) {
 		}
 	}
 	if text != "" {
-		stream = append(stream, &Token{line, pos, text})
+		stream = append(stream, &Token{line: line, col: pos, text: text})
 	}
 	return
 }
