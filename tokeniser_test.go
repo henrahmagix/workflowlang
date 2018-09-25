@@ -46,3 +46,12 @@ func TestTokeniserVariable(t *testing.T) {
 	}
 	assert.Equal(t, expected, actual)
 }
+
+func TestTokeniserEscapedChars(t *testing.T) {
+	input := `start=\$bar something $foo`
+	actual := TokenStream(input)
+	expected := []*Token{
+		{0, "start="}, {6, "\\"}, {7, "$"}, {8, "bar"}, {12, "something"}, {22, "$"}, {23, "foo"},
+	}
+	assert.Equal(t, expected, actual)
+}
