@@ -14,3 +14,12 @@ func TestTokeniser(t *testing.T) {
 	}
 	assert.Equal(t, expected, actual)
 }
+
+func TestTokeniserVariable(t *testing.T) {
+	input := `$foo $bar`
+	actual := TokenStream(input)
+	expected := []*Token{
+		{0, "$"}, {1, "foo"}, {5, "$"}, {6, "bar"},
+	}
+	assert.Equal(t, expected, actual)
+}
