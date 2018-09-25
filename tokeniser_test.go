@@ -48,7 +48,7 @@ func TestTokeniserNewlines(t *testing.T) {
 end if`
 	actual := TokenStream(input)
 	expected := []*Token{
-		{line: 0, col: 0, text: "if"}, {line: 0, col: 2, text: " "}, {line: 0, col: 3, symbol: '$'}, {line: 0, col: 4, text: "foo"}, {line: 0, col: 7, text: " "}, {line: 0, col: 8, text: "equals"}, {line: 0, col: 14, text: " "}, {line: 0, col: 15, text: "bar"}, {line: 0, col: 18, symbol: '\n'},
+		{col: 0, text: "if"}, {col: 2, text: " "}, {col: 3, symbol: '$'}, {col: 4, text: "foo"}, {col: 7, text: " "}, {col: 8, text: "equals"}, {col: 14, text: " "}, {col: 15, text: "bar"}, {col: 18, symbol: '\n'},
 		{line: 1, col: 0, symbol: '\t'}, {line: 1, col: 1, text: "something"}, {line: 1, col: 10, symbol: '\n'},
 		{line: 2, col: 0, text: "end"}, {line: 2, col: 3, text: " "}, {line: 2, col: 4, text: "if"},
 	}
