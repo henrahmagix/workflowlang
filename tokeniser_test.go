@@ -24,7 +24,7 @@ func TestTokeniserWords(t *testing.T) {
 	input := `show cancel alert`
 	actual := TokenStream(input)
 	expected := []*Token{
-		{0, "show"}, {5, "cancel"}, {12, "alert"},
+		{0, "show"}, {4, " "}, {5, "cancel"}, {11, " "}, {12, "alert"},
 	}
 	assert.Equal(t, expected, actual)
 }
@@ -33,7 +33,7 @@ func TestTokeniserParens(t *testing.T) {
 	input := `(Title) (Body)`
 	actual := TokenStream(input)
 	expected := []*Token{
-		{0, "("}, {1, "Title"}, {6, ")"}, {8, "("}, {9, "Body"}, {13, ")"},
+		{0, "("}, {1, "Title"}, {6, ")"}, {7, " "}, {8, "("}, {9, "Body"}, {13, ")"},
 	}
 	assert.Equal(t, expected, actual)
 }
@@ -42,7 +42,7 @@ func TestTokeniserVariable(t *testing.T) {
 	input := `$foo $bar`
 	actual := TokenStream(input)
 	expected := []*Token{
-		{0, "$"}, {1, "foo"}, {5, "$"}, {6, "bar"},
+		{0, "$"}, {1, "foo"}, {4, " "}, {5, "$"}, {6, "bar"},
 	}
 	assert.Equal(t, expected, actual)
 }
@@ -51,7 +51,7 @@ func TestTokeniserEscapedChars(t *testing.T) {
 	input := `start=\$bar something $foo`
 	actual := TokenStream(input)
 	expected := []*Token{
-		{0, "start="}, {6, "\\"}, {7, "$"}, {8, "bar"}, {12, "something"}, {22, "$"}, {23, "foo"},
+		{0, "start="}, {6, "\\"}, {7, "$"}, {8, "bar"}, {11, " "}, {12, "something"}, {21, " "}, {22, "$"}, {23, "foo"},
 	}
 	assert.Equal(t, expected, actual)
 }
@@ -62,8 +62,8 @@ func TestTokeniserNewlines(t *testing.T) {
 end if`
 	actual := TokenStream(input)
 	expected := []*Token{
-		{0, "if"}, {3, "$"}, {4, "foo"}, {8, "equals"}, {15, "bar"}, {18, "\n"},
-		{19, "\t"}, {20, "something"}, {29, "\n"}, {30, "end"}, {34, "if"},
+		{0, "if"}, {2, " "}, {3, "$"}, {4, "foo"}, {7, " "}, {8, "equals"}, {14, " "}, {15, "bar"}, {18, "\n"},
+		{19, "\t"}, {20, "something"}, {29, "\n"}, {30, "end"}, {33, " "}, {34, "if"},
 	}
 	assert.Equal(t, expected, actual)
 }

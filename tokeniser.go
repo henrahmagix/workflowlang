@@ -10,14 +10,7 @@ func TokenStream(input string) (stream []*Token) {
 	text := ""
 	for i, char := range input {
 		switch char {
-		case ' ':
-			if text != "" {
-				stream = append(stream, &Token{pos, text})
-				text = ""
-			}
-			pos = i + 1
-			continue
-		case '(', ')', '$', '\\', '\n', '\t':
+		case ' ', '(', ')', '$', '\\', '\n', '\t':
 			if text != "" {
 				stream = append(stream, &Token{pos, text})
 				text = ""
