@@ -8,6 +8,7 @@ type Token struct {
 func TokenStream(input string) (stream []*Token) {
 	pos := 0
 	text := ""
+	lineReset := 0
 	for i, char := range input {
 		switch char {
 		case ' ', '(', ')', '$', '\\', '\n', '\t':
@@ -15,11 +16,17 @@ func TokenStream(input string) (stream []*Token) {
 				stream = append(stream, &Token{pos, text})
 				text = ""
 			}
-			stream = append(stream, &Token{i, string(char)})
-			pos = i + 1
-			continue
+			pos = i - lineReset
+			stream = append(stream, &Token{pos, string(char)})
+			if char == '\n' {
+				pos = 0
+				lineReset = i + 1
+			} else {
+				pos = pos + 1
+			}
+		default:
+			text = text + string(char)
 		}
-		text = text + string(char)
 	}
 	if text != "" {
 		stream = append(stream, &Token{pos, text})

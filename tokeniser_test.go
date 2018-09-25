@@ -63,7 +63,8 @@ end if`
 	actual := TokenStream(input)
 	expected := []*Token{
 		{0, "if"}, {2, " "}, {3, "$"}, {4, "foo"}, {7, " "}, {8, "equals"}, {14, " "}, {15, "bar"}, {18, "\n"},
-		{19, "\t"}, {20, "something"}, {29, "\n"}, {30, "end"}, {33, " "}, {34, "if"},
+		{0, "\t"}, {1, "something"}, {10, "\n"},
+		{0, "end"}, {3, " "}, {4, "if"},
 	}
 	assert.Equal(t, expected, actual)
 }
