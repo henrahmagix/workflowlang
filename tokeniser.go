@@ -1,5 +1,7 @@
 package workflowlang
 
+import "bytes"
+
 type Token struct {
 	line   int
 	col    int
@@ -7,14 +9,25 @@ type Token struct {
 	text   string
 }
 
-func TokenStream(input string) (stream []*Token) {
+type tokeniser struct {
+	symbols []byte
+}
+
+func NewTokeniser(symbols []byte) *tokeniser {
+	return &tokeniser{symbols}
+}
+
+var whitespace = []byte{' ', '\n', '\t'}
+
+// var defaultSymbols = []byte{'(', ')', '$', '\\', '\n', '\t'}
+
+func (t *tokeniser) stream(input string) (stream []*Token) {
 	pos := 0
 	text := ""
 	line := 0
 	colReset := 0
 	for i, char := range input {
-		switch char {
-		case ' ', '(', ')', '$', '\\', '\n', '\t':
+		if bytes.ContainsRune(t.symbols, char) || bytes.ContainsRune(whitespace, char) {
 			if text != "" {
 				stream = append(stream, &Token{line: line, col: pos, text: text})
 				text = ""
@@ -34,7 +47,7 @@ func TokenStream(input string) (stream []*Token) {
 			} else {
 				pos += 1
 			}
-		default:
+		} else {
 			text = text + string(char)
 		}
 	}
