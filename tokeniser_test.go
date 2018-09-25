@@ -6,11 +6,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTokeniser(t *testing.T) {
-	input := `show cancel alert (Title) (Body)`
+func TestTokeniserWords(t *testing.T) {
+	input := `show cancel alert`
 	actual := TokenStream(input)
 	expected := []*Token{
-		{0, "show"}, {5, "cancel"}, {12, "alert"}, {18, "("}, {19, "Title"}, {24, ")"}, {26, "("}, {27, "Body"}, {31, ")"},
+		{0, "show"}, {5, "cancel"}, {12, "alert"},
+	}
+	assert.Equal(t, expected, actual)
+}
+
+func TestTokeniserParens(t *testing.T) {
+	input := `(Title) (Body)`
+	actual := TokenStream(input)
+	expected := []*Token{
+		{0, "("}, {1, "Title"}, {6, ")"}, {8, "("}, {9, "Body"}, {13, ")"},
 	}
 	assert.Equal(t, expected, actual)
 }
