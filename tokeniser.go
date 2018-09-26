@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"log"
 	"strings"
+	"unicode"
 )
 
 type Token struct {
@@ -23,8 +24,6 @@ type tokeniser struct {
 func NewTokeniser(symbols []byte) *tokeniser {
 	return &tokeniser{symbols}
 }
-
-var whitespace = []byte{' ', '\t'}
 
 // var defaultSymbols = []byte{'(', ')', '$', '\\'}
 
@@ -59,7 +58,7 @@ func (t *tokeniser) Stream(input string) (stream []*Token) {
 				col = i
 				stream = append(stream, &Token{line: line, col: col, symbol: char})
 				col += 1
-			} else if bytes.ContainsRune(whitespace, char) {
+			} else if unicode.IsSpace(char) {
 				if text != "" {
 					stream = append(stream, &Token{line: line, col: col, text: text})
 					text = ""
