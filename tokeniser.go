@@ -7,7 +7,8 @@ type Token struct {
 	col        int
 	symbol     rune
 	text       string
-	whitespace int
+	whitespace string
+	newline    bool
 }
 
 type tokeniser struct {
@@ -18,42 +19,62 @@ func NewTokeniser(symbols []byte) *tokeniser {
 	return &tokeniser{symbols}
 }
 
-var whitespace = []byte{' ', '\n', '\t'}
+var whitespace = []byte{' ', '\t'}
+var newlines = []byte{'\r', '\n'}
 
 // var defaultSymbols = []byte{'(', ')', '$', '\\', '\n', '\t'}
 
-func (t *tokeniser) stream(input string) (stream []*Token) {
-	pos := 0
+func (t *tokeniser) Stream(input string) (stream []*Token) {
 	text := ""
+	space := ""
+	col := 0
 	line := 0
 	colReset := 0
 	for i, char := range input {
-		if bytes.ContainsRune(t.symbols, char) || bytes.ContainsRune(whitespace, char) {
+		if bytes.ContainsRune(t.symbols, char) {
 			if text != "" {
-				stream = append(stream, &Token{line: line, col: pos, text: text})
+				stream = append(stream, &Token{line: line, col: col, text: text})
 				text = ""
 			}
-			pos = i - colReset
-			t := &Token{line: line, col: pos}
-			if char == ' ' {
-				t.whitespace += 1
-			} else {
-				t.symbol = char
+			if space != "" {
+				stream = append(stream, &Token{line: line, col: col, whitespace: space})
+				space = ""
 			}
-			stream = append(stream, t)
-			if char == '\n' {
-				pos = 0
-				colReset = i + 1
-				line += 1
-			} else {
-				pos += 1
+			col = i - colReset
+			stream = append(stream, &Token{line: line, col: col, symbol: char})
+			col += 1
+		} else if bytes.ContainsRune(newlines, char) {
+			if text != "" {
+				stream = append(stream, &Token{line: line, col: col, text: text})
+				text = ""
 			}
+			if space != "" {
+				stream = append(stream, &Token{line: line, col: col, whitespace: space})
+				space = ""
+			}
+			col = i - colReset
+			stream = append(stream, &Token{line: line, col: col, newline: true})
+			col = 0
+			colReset = i + 1
+			line += 1
+		} else if bytes.ContainsRune(whitespace, char) {
+			if text != "" {
+				stream = append(stream, &Token{line: line, col: col, text: text})
+				text = ""
+				col = i - colReset
+			}
+			space = space + string(char)
 		} else {
+			if space != "" {
+				stream = append(stream, &Token{line: line, col: col, whitespace: space})
+				space = ""
+				col = i - colReset
+			}
 			text = text + string(char)
 		}
 	}
 	if text != "" {
-		stream = append(stream, &Token{line: line, col: pos, text: text})
+		stream = append(stream, &Token{line: line, col: col, text: text})
 	}
 	return
 }
