@@ -55,6 +55,20 @@ end if`
 	assert.Equal(t, expected, actual)
 }
 
+func TestTokeniserTrailingNewline(t *testing.T) {
+	input := `first
+second
+newlineafter
+`
+	actual := NewTokeniser(nil).Stream(input)
+	expected := []*Token{
+		{col: 0, text: "first"}, {col: 5, newline: true},
+		{line: 1, col: 0, text: "second"}, {line: 1, col: 6, newline: true},
+		{line: 2, col: 0, text: "newlineafter"},
+	}
+	assert.Equal(t, expected, actual)
+}
+
 func TestTokeniserWhitespace(t *testing.T) {
 	input := "foo    bar wef"
 	actual := NewTokeniser(nil).Stream(input)
